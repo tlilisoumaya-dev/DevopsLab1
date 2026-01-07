@@ -27,12 +27,12 @@ jobs:
 
       - name: Run tests with pytest
         run: |
-          pytest --junitxml=reports/results.xml
+          pytest --junitxml=./reports/results.xml
 
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: testReport
-          path: reports/report.xml
+          path: ./reports/report.xml
 
