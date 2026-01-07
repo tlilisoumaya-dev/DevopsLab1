@@ -1,4 +1,4 @@
-name: Python CI with Pytest
+Oname: Python CI with Pytest
 
 on:
   push:
@@ -34,9 +34,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: testReport
-<<<<<<< HEAD
-          path: ./reports/results.xml
-=======
           path: reports/results.xml
->>>>>>> a39234c (Update workflow YAML with new changes)
 
