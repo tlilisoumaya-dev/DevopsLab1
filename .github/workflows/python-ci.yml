@@ -42,5 +42,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Deploy application
-        run: bash ./deploy.sh production
-  
+      - name: Send email after successful deploy
+      - uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
+          subject: "Deploy Successful - GitHub Actions"
+          body: | 
+               Le déploiement a été effectué avec succès !
+
+            Repository : ${{ github.repository }}
+            Branche    : ${{ github.ref_name }}
+            Commit     : ${{ github.sha }}
+            Auteur     : ${{ github.actor }}
+          to: ${{ secrets.GMAIL_USERNAME }}
+          from: GitHub Actions
