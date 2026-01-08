@@ -7,17 +7,11 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  built-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Python environment
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -35,17 +29,20 @@ jobs:
         with:
           name: testReport
           path: reports/results.xml
+
   deploy:
     needs: built-and-test
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Deploy application
         run: |
-           echo " eploying application..."
-      - name: Send email after successful deploy
+          echo "Deploying application..."
+
+      - name: Send email after deploy
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -53,12 +50,11 @@ jobs:
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_PASSWORD }}
           subject: "Deploy Successful - GitHub Actions"
-          body: | 
-               Le déploiement a été effectué avec succès !
-
+          body: |
+            Le déploiement a été effectué avec succès !
             Repository : ${{ github.repository }}
             Branche    : ${{ github.ref_name }}
             Commit     : ${{ github.sha }}
             Auteur     : ${{ github.actor }}
-          to: ${{ secrets.GMAIL_USERNAME }}
-          from: GitHub Actions
+          to: "chokri.gammoudi@gmail.com"
+          from: "GitHub Actions"
