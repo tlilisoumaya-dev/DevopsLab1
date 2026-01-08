@@ -35,4 +35,12 @@ jobs:
         with:
           name: testReport
           path: reports/results.xml
-
+  deploy:
+    needs: built-and-test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy application
+        run: bash ./deploy.sh production
+  
