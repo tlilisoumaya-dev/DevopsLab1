@@ -24,7 +24,7 @@ jobs:
           pytest --junitxml=./reports/results.xml
 
       - name: Upload test report
-        if: failure()
+        if: always()  # toujours uploader pour le job suivant
         uses: actions/upload-artifact@v4
         with:
           name: testReport
@@ -38,6 +38,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Télécharger le rapport du job précédent
+      - name: Download test report
+        uses: actions/download-artifact@v4
+        with:
+          name: testReport
+          path: reports  # mettra le fichier dans le même chemin
+
       - name: Deploy application
         run: |
           echo "Deploying application..."
@@ -49,7 +56,7 @@ jobs:
           server_port: 587
           username: ${{ secrets.GMAIL_USERNAME }}
           password: ${{ secrets.GMAIL_PASSWORD }}
-          subject: "Deploy Successful - GitHub Actions with attachment"
+          subject: "Deploy Successful - GitHub Actions"
           body: |
             Le déploiement a été effectué avec succès !
             Repository : ${{ github.repository }}
